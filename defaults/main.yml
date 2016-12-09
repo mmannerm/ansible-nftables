@@ -1,0 +1,3 @@
+---
+# defaults file for nftables
+nft_interface_internet: "eth0"

@@ -1,0 +1,44 @@
+---
+molecule:
+  raw_ssh_args:
+    - -o StrictHostKeyChecking=false
+    - -o UserKnownHostsFile=/dev/null
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+vagrant:
+  platforms:
+    - name: ubuntu-16.04
+      box: bento/ubuntu-16.04
+  providers:
+    - name: virtualbox
+      type: virtualbox
+      options:
+        memory: 512
+        cpus: 2
+  instances:
+    - name: nftables-01
+      ansible_groups:
+        - group1
+      interfaces:
+        - network_name: private_network
+          type: dhcp
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.0.1
+          auto_config: true
+    - name: nftables-02
+      ansible_groups:
+        - group2
+      interfaces:
+        - network_name: private_network
+          type: dhcp
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.0.2
+          auto_config: true
+verifier:
+  name: testinfra

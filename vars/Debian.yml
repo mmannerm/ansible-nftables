@@ -1,0 +1,4 @@
+---
+__nft_package: "nftables"
+nft_config_dir: "/etc/nftables.d"
+nft_master_config: "/etc/nftables.conf"

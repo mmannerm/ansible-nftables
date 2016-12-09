@@ -1,0 +1,17 @@
+define int_loopback = {{ nft_interface_loopback }}
+define int_internet = {{ nft_interface_internet }}
+
+define net_loopback = 127.0.0.0/8
+define net_loopback6 = ::1/128
+
+# Private, reserved and test networks are not legitimate ingress traffic
+define net_private = { 10.0.0.0/8, 172.16.0.0/16, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/5, 192.0.2.0/24 }
+define net_private6 = fc00::/7
+
+define net_multicast = 224.0.0.0/4
+define broadcast_src = 0.0.0.0
+define broadcast_dest = 255.255.255.255
+
+define ports_priv = 0-1023
+define ports_unpriv = 1024-65535
+

@@ -1,0 +1,10 @@
+---
+- name: ensure nftables is installed.
+  apt:
+    name: "{{ nft_package }}"
+    state: present
+
+- name: remove sysv init script
+  file:
+    path: "/etc/init.d/nftables"
+    state: absent
