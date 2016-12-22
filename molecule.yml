@@ -22,40 +22,56 @@ vagrant:
       ansible_groups:
         - testrunner
       interfaces:
-        - network_name: private_network
-          type: dhcp
-          auto_config: true
+        #- network_name: private_network
+        #  type: dhcp
+        #  auto_config: true
         - network_name: private_network
           type: static
           ip: 192.168.1.101
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: "fc00::101"
           auto_config: true
     - name: nftables-gw
       ansible_groups:
         - nftables
         - gw
       interfaces:
-        - network_name: private_network
-          type: dhcp
-          auto_config: true
+        #- network_name: private_network
+        #  type: dhcp
+        #  auto_config: true
         - network_name: private_network
           type: static
           ip: 192.168.1.102
           auto_config: true
         - network_name: private_network
           type: static
+          ip: "fc00::102"
+          auto_config: true
+        - network_name: private_network
+          type: static
           ip: 192.168.2.102
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: "fc00::1:102"
           auto_config: true
     - name: nftables-host
       ansible_groups:
         - nftables
         - host
       interfaces:
-        - network_name: private_network
-          type: dhcp
-          auto_config: true
+        #- network_name: private_network
+        #  type: dhcp
+        #  auto_config: true
         - network_name: private_network
           type: static
           ip: 192.168.2.103
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: "fc00::1:103"
           auto_config: true
 verifier:
   name: testinfra
