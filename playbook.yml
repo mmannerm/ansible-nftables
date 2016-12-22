@@ -1,4 +1,32 @@
 ---
-- hosts: all
+- hosts: nftables
   roles:
     - role: nftables
+
+- hosts: all
+  tasks:
+    - name: install pip
+      package: name=python-pip state=present
+
+    - name: install test dependencies
+      pip: "name={{ item }}"
+      with_items:
+        - scapy
+        - pytest
+
+- hosts: testrunner
+  tasks:
+    - name: copy testrunner tests
+      copy:
+        src: test_runner.py
+        dest: /tmp/test_runner.py
+
+    - name: run testrunner tests
+      shell: pytest
+      args:
+        chdir: /tmp
+      changed_when: false
+      register: testrunner_tests
+
+    - name: display testrunner output
+      debug: var=testrunner_tests.stdout_lines

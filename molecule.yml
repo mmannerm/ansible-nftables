@@ -18,27 +18,44 @@ vagrant:
         memory: 512
         cpus: 2
   instances:
-    - name: nftables-01
+    - name: nftables-runner
       ansible_groups:
-        - group1
+        - testrunner
       interfaces:
         - network_name: private_network
           type: dhcp
           auto_config: true
         - network_name: private_network
           type: static
-          ip: 192.168.0.1
+          ip: 192.168.1.101
           auto_config: true
-    - name: nftables-02
+    - name: nftables-gw
       ansible_groups:
-        - group2
+        - nftables
+        - gw
       interfaces:
         - network_name: private_network
           type: dhcp
           auto_config: true
         - network_name: private_network
           type: static
-          ip: 192.168.0.2
+          ip: 192.168.1.102
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.2.102
+          auto_config: true
+    - name: nftables-host
+      ansible_groups:
+        - nftables
+        - host
+      interfaces:
+        - network_name: private_network
+          type: dhcp
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.2.103
           auto_config: true
 verifier:
   name: testinfra
