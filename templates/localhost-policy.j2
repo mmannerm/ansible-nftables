@@ -4,7 +4,3 @@
 add rule inet filter input iif $int_loopback accept comment "accept loopback always"
 add rule inet filter output oif $int_loopback accept comment "accept loopback always"
 
-# drop loopback traffic not coming from loopback interface
-add rule inet filter input iif != $int_loopback ip daddr $net_loopback counter drop comment "drop traffic to loopback not coming from loopback"
-add rule inet filter input iif != $int_loopback ip6 daddr $net_loopback6 counter drop comment "drop traffic to loopback not coming from loopback"
-
