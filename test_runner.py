@@ -37,3 +37,27 @@ def test_martian_destination_ipv6():
   assert p, "gw is not responding to echo-request"
   p = srp1(Ether(src=r.dst, dst=r.src)/IPv6(src=MY_ADDR_V6, dst='::1')/ICMPv6EchoRequest(), timeout=1, iface=GW_INT_V6)
   assert not p, "martian destination ::1 accepted by gw"
+
+
+def test_ct_invalid_ssh():
+  # Test with Xmas scan, no reply (RST or anything) should be sent
+  p = sr1(IP(dst=GW_ADDR)/TCP(dport=22, flags="FPU"), timeout=1, iface=GW_INT)
+  assert not p, "Invalid connection state to ssh not dropped by gw"
+  p = sr1(IP(dst=GW_ADDR)/TCP(dport=22, flags="S"), timeout=1, iface=GW_INT)
+  assert p, "new connection state to ssh not accepted by gw"
+  # Test with Xmas scan, no reply (RST or anything) should be sent
+  p = sr1(IP(dst=GW_ADDR)/TCP(dport=23, flags="FPU"), timeout=1, iface=GW_INT)
+  assert not p, "Invalid connection state to telnet not dropped by gw"
+
+
+def test_ct_invalid_ssh_ipv6():
+  r = neighsol(GW_ADDR_V6, MY_ADDR_V6, GW_INT_V6)
+  assert r and r.lladdr, "unable to resolve gw mac address"
+  # Test with Xmas scan, no reply (RST or anything) should be sent
+  p = srp1(Ether(dst=r.src)/IPv6(dst=GW_ADDR_V6)/TCP(dport=22, flags="FPU"), timeout=1, iface=GW_INT_V6)
+  assert not p, "Invalid connection state to ssh not dropped by gw"
+  p = srp1(Ether(dst=r.src)/IPv6(dst=GW_ADDR_V6)/TCP(dport=22, flags="S"), timeout=1, iface=GW_INT_V6)
+  assert p, "new connection state to ssh not accepted by gw"
+  # Test with Xmas scan, no reply (RST or anything) should be sent
+  p = srp1(Ether(dst=r.src)/IPv6(dst=GW_ADDR_V6)/TCP(dport=23, flags="FPU"), timeout=1, iface=GW_INT_V6)
+  assert not p, "Invalid connection state to telnet not dropped by gw"

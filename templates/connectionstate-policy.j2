@@ -1,0 +1,9 @@
+#!/usr/sbin/nft -f
+
+# accept established and related connections always
+add rule inet filter input ct state {established, related} accept
+add rule inet filter output ct state {established, related} accept
+
+# log with rate limiting invalid connection state packages
+add rule inet filter input ct state invalid counter log prefix "conn state invalid/in: " limit rate 3/second drop
+add rule inet filter output ct state invalid counter log prefix "conn state invalid/out: " limit rate 3/second drop
