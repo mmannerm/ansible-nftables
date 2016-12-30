@@ -33,6 +33,10 @@ vagrant:
           type: static
           ip: "fc00::101"
           auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.3.101
+          auto_config: true
     - name: nftables-gw
       ansible_groups:
         - nftables
@@ -72,6 +76,10 @@ vagrant:
         - network_name: private_network
           type: static
           ip: "fc00::1:103"
+          auto_config: true
+        - network_name: private_network
+          type: static
+          ip: 192.168.3.103
           auto_config: true
 verifier:
   name: testinfra

@@ -8,3 +8,13 @@
   file:
     path: "/etc/init.d/nftables"
     state: absent
+
+- name: Enable IPv4 Routing
+  sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+  become: yes
+  when: nft_mode == "router"
+
+- name: Enable IPv6 Routing
+  sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes state=present reload=yes
+  become: yes
+  when: nft_mode == "router" and nft_enable_ipv6

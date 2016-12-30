@@ -3,9 +3,14 @@
 from scapy.all import *
 
 GW_ADDR = "192.168.1.102"
+GW_ADDR_PRIVATE = "192.168.2.102"
 GW_ADDR_V6 = "fc00::102"
 GW_INT = conf.route.route(GW_ADDR)[0]
 GW_INT_V6 = conf.route6.route(GW_ADDR_V6)[0]
+
+HOST_ADDR = "192.168.3.103"
+HOST_ADDR_PRIVATE = "192.168.2.103"
+HOST_INT = conf.route.route(HOST_ADDR)[0]
 
 MY_ADDR = conf.route.route(GW_ADDR)[1]
 MY_ADDR_V6 = conf.route6.route(GW_ADDR_V6)[1]
@@ -28,6 +33,13 @@ def test_martian_destination():
 def test_ping_gw_ipv6():
   p = sr1(IPv6(dst=GW_ADDR_V6)/ICMPv6EchoRequest(), timeout=1)
   assert p.type == ICMPv6EchoReply.type.s2i["Echo Reply"], "invalid response echo-reply != %r" % p.type
+
+
+def test_routing():
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/ICMP(), timeout=1, iface=GW_INT)
+  assert p[ICMP].type == ICMP.type.s2i["echo-reply"], "invalid response to echo-reply != %r" % p[ICMP].type
+  p = sr1(IP(dst=GW_ADDR_PRIVATE)/ICMP(), timeout=1, iface=HOST_INT)
+  assert not p, "host is forwarding"
 
 
 def test_martian_destination_ipv6():

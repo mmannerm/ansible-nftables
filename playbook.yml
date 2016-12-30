@@ -1,7 +1,17 @@
 ---
-- hosts: nftables
+- hosts: host
   roles:
     - role: nftables
+      nft_mode: host
+  tasks:
+    - name: host - add route to public network via gw
+      shell: "ip route replace 192.168.1.0/24 via 192.168.2.102"
+      changed_when: false
+
+- hosts: gw
+  roles:
+    - role: nftables
+      nft_mode: router
 
 - hosts: all
   tasks:
@@ -16,6 +26,10 @@
 
 - hosts: testrunner
   tasks:
+    - name: testrunner - add route to host in private network via gw
+      shell: "ip route replace 192.168.2.0/24 via 192.168.1.102"
+      changed_when: false
+
     - name: copy testrunner tests
       copy:
         src: test_runner.py

@@ -1,3 +1,9 @@
 ---
 # defaults file for nftables
 nft_interface_internet: "eth0"
+
+# host mode {host, router, bridge}
+nft_mode: "host"
+
+# Enable/Disable IPv6 support and rules
+nft_enable_ipv6: true
