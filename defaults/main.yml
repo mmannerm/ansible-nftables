@@ -1,9 +1,25 @@
 ---
-# defaults file for nftables
-nft_interface_internet: "eth0"
+nft_if_external:
+  - device: eth0
+    family: inet
+    method: dhcp
+
+nft_if_internal:
+  - device: eth1
+    family: inet
+    method: static
+    address: 192.168.0.1
+    netmask: 255.255.255.0
 
 # host mode {host, router, bridge}
 nft_mode: "host"
 
 # Enable/Disable IPv6 support and rules
 nft_enable_ipv6: true
+
+# Allow
+nft_allow_mobile_ipv6: false
+
+# Rate limits
+nft_limit_icmp_inbound: "100/second"
+nft_limit_icmp_outbound: "100/second"

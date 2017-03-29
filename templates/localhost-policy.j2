@@ -1,6 +1,5 @@
-#!/usr/sbin/nft -f
-
-# accept loopback traffic always
-add rule inet filter input iif $int_loopback accept comment "accept loopback always"
-add rule inet filter output oif $int_loopback accept comment "accept loopback always"
-
+chain localhost {
+	# accept loopback traffic always
+	iif $int_loopback accept comment "accept loopback always"
+	oif $int_loopback accept comment "accept loopback always"
+}

@@ -3,30 +3,27 @@
 flush ruleset
 
 include "nftables.d/constants"
-#include "nftables.d/vars"
 
-include "nftables.d/setup-tables"
-include "nftables.d/localhost-policy"
-include "nftables.d/connectionstate-policy"
+table inet filter {
+	include "nftables.d/connectionstate-policy"
+	include "nftables.d/localhost-policy"
 
-#table inet filter {
-#	chain input {
-#		type filter hook input priority 0;
-#
-#		# accept any localhost traffic
-#		iif lo accept
-#
-#		# accept traffic originated from us
-#		ct state established,related accept
-#
-#		# activate the following line to accept common local services
-#		#tcp dport { 22, 80, 443 } ct state new accept
-#
-#		# accept neighbour discovery otherwise IPv6 connectivity breaks.
-#		ip6 nexthdr icmpv6 icmpv6 type { nd-neighbor-solicit,  nd-router-advert, nd-neighbor-advert } accept
-#
-#		# count and drop any other traffic
-#		counter drop
-#	}
-#}
+        chain input {
+                type filter hook input priority 0;
+                jump localhost
+                jump connectionstate
+        }
 
+        chain output {
+                type filter hook output priority 0;
+                jump localhost
+                jump connectionstate
+        }
+
+        chain forward {
+                type filter hook forward priority 0;
+		{% if nft_mode == "router" %}
+                jump connectionstate
+		{% endif %}
+        }
+}

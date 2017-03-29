@@ -44,3 +44,20 @@
 
     - name: display testrunner output
       debug: var=testrunner_tests.stdout_lines
+
+- hosts: host
+  tasks:
+    - name: copy test_host tests
+      copy:
+        src: test_host.py
+        dest: /tmp/test_host.py
+
+    - name: run test_host tests
+      shell: pytest
+      args:
+        chdir: /tmp
+      changed_when: false
+      register: testhost_tests
+
+    - name: display testhost output
+      debug: var=testhost_tests.stdout_lines

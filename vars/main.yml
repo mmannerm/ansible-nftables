@@ -1,7 +1,6 @@
 ---
-nft_interface_loopback: "lo"
+nft_if_loopback: "lo"
 nft_configuration_files:
   - "constants.j2"
-  - "setup-tables.j2"
   - "localhost-policy.j2"
   - "connectionstate-policy.j2"

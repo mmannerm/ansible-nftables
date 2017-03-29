@@ -17,6 +17,10 @@
     state: directory
     mode: 0750
 
+- name: set variables
+  set_fact:
+    _nft_if_external: "{{ nft_if_external | join(', ', attribute='device') }}"
+
 - name: nftables master configuration
   template:
     src: nftables.conf.j2

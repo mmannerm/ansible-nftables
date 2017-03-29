@@ -1,20 +1,8 @@
-#!/usr/sbin/nft -f
+chain connectionstate {
+	# accept established and related connections always
+	ct state {established, related} accept
 
-# accept established and related connections always
-add rule inet filter input ct state {established, related} accept
-add rule inet filter output ct state {established, related} accept
-{% if nft_mode == "router" %}
-add rule inet filter forward ct state {established, related} accept
-{% endif %}
-
-# drop and log with rate limiting invalid connection state packages
-add rule inet filter input ct state invalid limit rate 3/second log level debug prefix "conn state invalid/in: " counter
-add rule inet filter input ct state invalid counter drop
-
-add rule inet filter output ct state invalid limit rate 3/second log level debug prefix "conn state invalid/out: " counter
-add rule inet filter output ct state invalid counter drop
-
-{% if nft_mode == "router" %}
-add rule inet filter forward ct state invalid limit rate 3/second log level debug prefix "conn state invalid/fwd: " counter
-add rule inet filter forward ct state invalid counter drop
-{% endif %}
+	# drop and log with rate limiting invalid connection state packages
+	ct state invalid limit rate 3/second log level debug prefix "conn state invalid: " counter
+	ct state invalid counter drop
+}
