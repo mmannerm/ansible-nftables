@@ -54,12 +54,17 @@ def test_martian_destination_ipv6():
 def test_ct_invalid_ssh():
   # Test with Xmas scan, no reply (RST or anything) should be sent
   p = sr1(IP(dst=GW_ADDR)/TCP(dport=22, flags="FPU"), timeout=1, iface=GW_INT)
-  assert not p, "Invalid connection state to ssh not dropped by gw"
+  assert not p, "Invalid connection state to ssh to gw not dropped by gw"
   p = sr1(IP(dst=GW_ADDR)/TCP(dport=22, flags="S"), timeout=1, iface=GW_INT)
-  assert p, "new connection state to ssh not accepted by gw"
+  assert p, "new connection state to ssh to gw not accepted by gw"
   # Test with Xmas scan, no reply (RST or anything) should be sent
   p = sr1(IP(dst=GW_ADDR)/TCP(dport=23, flags="FPU"), timeout=1, iface=GW_INT)
-  assert not p, "Invalid connection state to telnet not dropped by gw"
+  assert not p, "Invalid connection state to telnet to gw not dropped by gw"
+  # Test with Xmas scan, no reply (RST or anything) should be sent
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/TCP(dport=22, flags="FPU"), timeout=1, iface=GW_INT)
+  assert not p, "Invalid connection state to ssh to host not dropped by gw"
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/TCP(dport=22, flags="S"), timeout=1, iface=GW_INT)
+  assert p, "new connection state to ssh to host not accepted by gw"
 
 
 def test_ct_invalid_ssh_ipv6():
