@@ -1,0 +1,29 @@
+define icmp_deprecated_types = {source-quench, info-request, info-reply, address-mask-request, address-mask-reply, timestamp-request, timestamp-reply}
+# TODO: should parameter-problem be allowed? what breaks if its not?
+define icmp_accept_types = {destination-unreachable, echo-request, echo-reply, time-exceeded, parameter-problem}
+# TODO: should other types be accepted for inbound/outbound traffic?
+
+chain icmp_common {
+        ip protocol icmp icmp type $icmp_deprecated_types counter drop comment "drop deprecated icmp packets"
+	ip protocol icmp icmp type destination-unreachable icmp code {6, 8, 9, 10} counter drop comment "drop deprecated icmp packets"
+}
+
+chain icmp_input {
+	jump icmp_common
+	ip protocol icmp icmp type $icmp_accept_types counter limit rate {{ nft_limit_icmp_inbound }} accept comment "rate limit inbound icmp"
+	ip protocol icmp counter drop
+}
+
+chain icmp_output {
+	jump icmp_common
+	ip protocol icmp icmp type destination-unreachable icmp code 4 accept comment "allow sending path-mtu discovery always"
+	ip protocol icmp icmp type $icmp_accept_types counter limit rate {{ nft_limit_icmp_outbound }} accept comment "rate limit outbound icmp"
+	ip protocol icmp counter drop
+}
+
+chain icmp_forward {
+	jump icmp_common
+	ip protocol icmp icmp type destination-unreachable icmp code 4 accept comment "allow forwarding path-mtu discovery always"
+	ip protocol icmp icmp type $icmp_accept_types counter limit rate {{ nft_limit_icmp_forward }} accept comment "rate limit forwarded icmp"
+	ip protocol icmp counter drop
+}

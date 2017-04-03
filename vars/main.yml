@@ -4,3 +4,4 @@ nft_configuration_files:
   - "constants.j2"
   - "localhost-policy.j2"
   - "connectionstate-policy.j2"
+  - "icmp-policy.j2"

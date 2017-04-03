@@ -7,23 +7,27 @@ include "nftables.d/constants"
 table inet filter {
 	include "nftables.d/connectionstate-policy"
 	include "nftables.d/localhost-policy"
+        include "nftables.d/icmp-policy"
 
         chain input {
                 type filter hook input priority 0;
                 jump localhost
                 jump connectionstate
+		jump icmp_input
         }
 
         chain output {
                 type filter hook output priority 0;
                 jump localhost
                 jump connectionstate
+		jump icmp_output
         }
 
         chain forward {
                 type filter hook forward priority 0;
 		{% if nft_mode == "router" %}
                 jump connectionstate
+		jump icmp_forward
 		{% endif %}
         }
 }

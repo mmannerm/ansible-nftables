@@ -21,5 +21,7 @@ nft_enable_ipv6: true
 nft_allow_mobile_ipv6: false
 
 # Rate limits
+# TODO: Determine what is acceptable rate limit and burst limit
 nft_limit_icmp_inbound: "100/second"
 nft_limit_icmp_outbound: "100/second"
+nft_limit_icmp_forward: "100/second"

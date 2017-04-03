@@ -78,3 +78,43 @@ def test_ct_invalid_ssh_ipv6():
   # Test with Xmas scan, no reply (RST or anything) should be sent
   p = srp1(Ether(dst=r.src)/IPv6(dst=GW_ADDR_V6)/TCP(dport=23, flags="FPU"), timeout=1, iface=GW_INT_V6)
   assert not p, "Invalid connection state to telnet not dropped by gw"
+
+
+def test_deprecated_icmp():
+  p = sr1(IP(dst=GW_ADDR)/ICMP(type="timestamp-request"), timeout=1, iface=GW_INT)
+  assert not p, "timestamp-request accepted by gw"
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/ICMP(type="timestamp-request"), timeout=1, iface=GW_INT)
+  assert not p, "timestamp-request routed by gw"
+  # address-mask-request should already be handled by the kernel
+  p = sr1(IP(dst=GW_ADDR)/ICMP(type="address-mask-request"), timeout=1, iface=GW_INT)
+  assert not p, "address-mask-request accepted by gw"
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/ICMP(type="address-mask-request"), timeout=1, iface=GW_INT)
+  assert not p, "address-mask-request routed by gw"
+  # information-request should already be handled by the kernel
+  p = sr1(IP(dst=GW_ADDR)/ICMP(type="information-request"), timeout=1, iface=GW_INT)
+  assert not p, "information-request accepted by gw"
+  p = sr1(IP(dst=HOST_ADDR_PRIVATE)/ICMP(type="information-request"), timeout=1, iface=GW_INT)
+  assert not p, "information-request routed by gw"
+
+
+def test_source_quench():
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((GW_ADDR, 22))
+  data = str(IP(dst=GW_ADDR)/TCP(dport=s.getpeername()[1], sport=s.getsockname()[1]))
+  # TODO: source quench does not send reply, so have to check with tcpdump and dmesg
+  send(IP(dst=GW_ADDR)/ICMP(type="source-quench")/data, iface=GW_INT)
+  s.close()
+
+
+# TODO
+def test_ping_of_death():
+  p = sr1(fragment(IP(dst=GW_ADDR)/ICMP()/("X"*60000)), timeout=1, iface=GW_INT)
+  assert p[ICMP].type == ICMP.type.s2i["dest-unreach"], "expected dest-unreach, received: %r" % p[ICMP].type
+  assert p[ICMP].code == 2, "expected protocol-unreachable, received: %r " % p[ICMP].code
+
+
+# TODO
+def test_nestea_attack():
+  send(IP(dst=GW_ADDR, id=42, flags="MF")/UDP()/("X"*10), iface=GW_INT)
+  send(IP(dst=GW_ADDR, id=42, frag=48)/("X"*116), iface=GW_INT)
+  send(IP(dst=GW_ADDR, id=42, flags="MF")/UDP()/("X"*224), iface=GW_INT)
