@@ -36,6 +36,30 @@ Including an example of how to use your role (for instance, with variables passe
       roles:
          - { role: mmannerm.nftables }
 
+References
+----------
+
+## Security and Protocols
+
+- [IETF Draft: Operational Security Considerations for IPv6 Networks](https://tools.ietf.org/html/draft-ietf-opsec-v6-10), March 2017
+- [IETF Draft: Recommendations on Filtering IPv6 Packets Containing IPv6 Extension Headers](https://tools.ietf.org/html/draft-ietf-opsec-ipv6-eh-filtering-02), October 2016
+- [Firewall Best Practices](https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2016-09-1/NET-2016-09-1_01.pdf), September 2016
+- [IETF Draft: Defeating attacks which employ Forged ICMP/ICMPv6 Error Messages (expired)](https://tools.ietf.org/html/draft-gont-opsec-icmp-ingress-filtering-02), March 2016
+- [RFC 7126: Recommendations on Filtering of IPv4 Packets Containing IPv4 Options](https://tools.ietf.org/html/rfc7126), February 2014
+- [IETF Draft: Recommendations for filtering ICMP messages (expired)](https://tools.ietf.org/html/draft-ietf-opsec-icmp-filtering-04), July 2013
+- [RFC 6918: Formally Deprecating Some ICMPv4 Message Types](https://tools.ietf.org/html/rfc6918), April 2013
+- [RFC 6633: Deprecation of ICMP Source Quench Messages](https://tools.ietf.org/html/rfc6633), May 2012
+- [RFC 6092: Recommended Simple Security Capabilities in Customer Premises Equipment (CPE) for Providing Residential IPv6 Internet Service](https://tools.ietf.org/html/rfc6092), January 2011
+- [RFC 5927: ICMP attacks against TCP](https://tools.ietf.org/html/rfc5927), July 2010
+- [RFC 4890: Recommendations for Filtering ICMPv6 Messages in Firewalls](https://tools.ietf.org/html/rfc4890), May 2007
+
+- [RFC 4443: Internet Control Message Protocol (ICMPv6)](https://tools.ietf.org/html/rfc4443), March 2006
+-- Section 2.4 Message Processing Rules
+
+## Tools
+
+- [Network packet forgery with Scapy](http://www.secdev.org/conf/scapy_pacsec05.handout.pdf)
+
 License
 -------
 
